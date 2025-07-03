@@ -1,0 +1,8 @@
+image: node:18
+
+tasks:
+  - command: n8n start
+
+ports:
+  - port: 5678
+    onOpen: open-preview
