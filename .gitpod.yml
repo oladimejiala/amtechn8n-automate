@@ -1,8 +1,10 @@
 image: node:18
 
 tasks:
-  - command: n8n start
-
+  - init: |
+      npm install -g n8n
+  - command: |
+      n8n start
 ports:
   - port: 5678
     onOpen: open-preview
