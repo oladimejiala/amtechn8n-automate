@@ -1,10 +1,33 @@
-image: node:18
+image:
+  file: .gitpod.Dockerfile
 
-tasks:
-  - init: |
-      npm install -g n8n
-  - command: |
-      n8n start
 ports:
   - port: 5678
-    onOpen: open-preview
+    onOpen: open-browser  # Auto-open n8n in browser when ready
+
+tasks:
+  - name: Setup n8n
+    init: |
+      # Install Node Version Manager
+      curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+      
+      # Load nvm
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+      
+      # Install Node.js 20 (required by n8n)
+      nvm install 20
+      nvm use 20
+      
+      # Install n8n globally in workspace storage
+      npm install -g n8n --prefix=/workspace/.npm-global
+      
+      # Make n8n available in PATH
+      echo 'export PATH="/workspace/.npm-global/bin:$PATH"' >> ~/.bashrc
+      source ~/.bashrc
+      
+      # Create persistent data folder
+      mkdir -p /workspace/n8n_data
+    command: ./start-n8n.sh  # Launch using our script
+
+# REMOVED THE UNNECESSARY VSCODE EXTENSIONS SECTION
